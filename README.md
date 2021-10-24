@@ -8,44 +8,44 @@ This code is based on [this article](https://medium.com/xeneta/fuzzy-search-with
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FVassilisPallas%2Fmongoose-fuzzy-searching.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FVassilisPallas%2Fmongoose-fuzzy-searching?ref=badge_shield)
 
-- [Features](#features)
-- [Install](#install)
-- [Getting started](#getting-started)
-  - [Initialize plugin](#initialize-plugin)
-  - [Plugin options](#plugin-options)
-    - [Fields](#fields)
-      - [String field](#string-field)
-      - [Object field](#object-field)
-    - [Middlewares](#middlewares)
-- [Query parameters](#query-parameters)
-  - [Instance method](#instance-method)
-  - [Query helper](#query-helper)
-- [Working with pre-existing data](#working-with-pre-existing-data)
-  - [Update all pre-existing documents with ngrams](#update-all-pre-existing-documents-with-ngrams)
-  - [Delete old ngrams from all documents](#delete-old-ngrams-from-all-documents)
-- [Testing and code coverage](#testing-and-code-coverage)
-  - [All tests](#all-tests)
-  - [Available test suites](#available-test-suites)
-- [License](#license)
+-   [Features](#features)
+-   [Install](#install)
+-   [Getting started](#getting-started)
+    -   [Initialize plugin](#initialize-plugin)
+    -   [Plugin options](#plugin-options)
+        -   [Fields](#fields)
+            -   [String field](#string-field)
+            -   [Object field](#object-field)
+        -   [Middlewares](#middlewares)
+-   [Query parameters](#query-parameters)
+    -   [Instance method](#instance-method)
+    -   [Query helper](#query-helper)
+-   [Working with pre-existing data](#working-with-pre-existing-data)
+    -   [Update all pre-existing documents with ngrams](#update-all-pre-existing-documents-with-ngrams)
+    -   [Delete old ngrams from all documents](#delete-old-ngrams-from-all-documents)
+-   [Testing and code coverage](#testing-and-code-coverage)
+    -   [All tests](#all-tests)
+    -   [Available test suites](#available-test-suites)
+-   [License](#license)
 
 ## Features
 
-- Creates Ngrams for the selected keys in the collection
-- [Add **fuzzySearch** method on model](#simple-usage)
-- [Work with pre-existing data](#work-with-pre-existing-data)
+-   Creates Ngrams for the selected keys in the collection
+-   [Add **fuzzySearch** method on model](#simple-usage)
+-   [Work with pre-existing data](#work-with-pre-existing-data)
 
 ## Install
 
 Install using [npm](https://npmjs.org)
 
 ```bash
-$ npm i mongoose-fuzzy-searching
+$ npm i https://github.com/chromezoneeths/mongoose-fuzzy-searching
 ```
 
 or using yarn
 
 ```bash
-$ yarn add mongoose-fuzzy-searching
+$ yarn add https://github.com/chromezoneeths/mongoose-fuzzy-searching
 ```
 
 ## Getting started
@@ -58,10 +58,10 @@ In order to let the plugin create the indexes, you need to set `useCreateIndex` 
 
 ```javascript
 const options = {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useFindAndModify: false,
-  useCreateIndex: true,
+	useNewUrlParser: true,
+	useUnifiedTopology: true,
+	useFindAndModify: false,
+	useCreateIndex: true,
 };
 
 mongoose.Promise = global.Promise;
@@ -71,40 +71,47 @@ return mongoose.connect(URL, options);
 In the below example, we have a `User` collection and we want to make fuzzy searching in `firstName` and `lastName`.
 
 ```javascript
-const { Schema } = require('mongoose');
+const {Schema} = require('mongoose');
 const mongoose_fuzzy_searching = require('mongoose-fuzzy-searching');
 
 const UserSchema = new Schema({
-  firstName: String,
-  lastName: String,
-  email: String,
-  age: Number,
+	firstName: String,
+	lastName: String,
+	email: String,
+	age: Number,
 });
 
-UserSchema.plugin(mongoose_fuzzy_searching, { fields: ['firstName', 'lastName'] });
+UserSchema.plugin(mongoose_fuzzy_searching, {
+	fields: ['firstName', 'lastName'],
+});
 const User = mongoose.model('User', UserSchema);
-module.exports = { User };
+module.exports = {User};
 ```
 
 ```javascript
-const user = new User({ firstName: 'Joe', lastName: 'Doe', email: 'joe.doe@mail.com', age: 30 });
+const user = new User({
+	firstName: 'Joe',
+	lastName: 'Doe',
+	email: 'joe.doe@mail.com',
+	age: 30,
+});
 
 try {
-  await user.save(); // mongodb: { ..., firstName_fuzzy: [String], lastName_fuzzy: [String] }
-  const users = await User.fuzzySearch('jo');
+	await user.save(); // mongodb: { ..., firstName_fuzzy: [String], lastName_fuzzy: [String] }
+	const users = await User.fuzzySearch('jo');
 
-  console.log(users);
-  // each user object will not contain the fuzzy keys:
-  // Eg.
-  // {
-  //   "firstName": "Joe",
-  //   "lastName": "Doe",
-  //   "email": "joe.doe@mail.com",
-  //   "age": 30,
-  //   "confidenceScore": 34.3 ($text meta score)
-  // }
+	console.log(users);
+	// each user object will not contain the fuzzy keys:
+	// Eg.
+	// {
+	//   "firstName": "Joe",
+	//   "lastName": "Doe",
+	//   "email": "joe.doe@mail.com",
+	//   "age": 30,
+	//   "confidenceScore": 34.3 ($text meta score)
+	// }
 } catch (e) {
-  console.error(e);
+	console.error(e);
 }
 ```
 
@@ -112,10 +119,10 @@ The results are sorted by the `confidenceScore` key. You can override this optio
 
 ```javascript
 try {
-  const users = await User.fuzzySearch('jo').sort({ age: -1 }).exec();
-  console.log(users);
+	const users = await User.fuzzySearch('jo').sort({age: -1}).exec();
+	console.log(users);
 } catch (e) {
-  console.error(e);
+	console.error(e);
 }
 ```
 
@@ -135,12 +142,14 @@ If you want to use the default options for all your fields, you can just pass th
 const mongoose_fuzzy_searching = require('mongoose-fuzzy-searching');
 
 const UserSchema = new Schema({
-  firstName: String,
-  lastName: String,
-  email: String,
+	firstName: String,
+	lastName: String,
+	email: String,
 });
 
-UserSchema.plugin(mongoose_fuzzy_searching, { fields: ['firstName', 'lastName'] });
+UserSchema.plugin(mongoose_fuzzy_searching, {
+	fields: ['firstName', 'lastName'],
+});
 ```
 
 ##### Object field
@@ -213,18 +222,18 @@ UserSchema.plugin(mongoose_fuzzy_searching, {
 
 Middlewares is an optional `Object` that can contain custom `pre` middlewares. This plugin is using these middlewares in order to create or update the fuzzy elements. That means that if you add `pre` middlewares, they will never get called since the plugin overrides them. To avoid that problem you can pass your custom midlewares into the plugin. Your middlewares will be called **first**. The middlewares you can pass are:
 
-- preSave
-  - stands for `schema.pre("save", ...)`
-- preInsertMany
-  - stands for `schema.pre("insertMany", ...)`
-- preUpdate
-  - stands for `schema.pre("update", ...)`
-- preUpdateOne
-  - stands for `schema.pre("updateOne", ...)`
-- preFindOneAndUpdate
-  - stands for `schema.pre("findOneAndUpdate", ...)`
-- preUpdateMany
-  - stands for `schema.pre("updateMany", ...)`
+-   preSave
+    -   stands for `schema.pre("save", ...)`
+-   preInsertMany
+    -   stands for `schema.pre("insertMany", ...)`
+-   preUpdate
+    -   stands for `schema.pre("update", ...)`
+-   preUpdateOne
+    -   stands for `schema.pre("updateOne", ...)`
+-   preFindOneAndUpdate
+    -   stands for `schema.pre("findOneAndUpdate", ...)`
+-   preUpdateMany
+    -   stands for `schema.pre("updateMany", ...)`
 
 If you want to add any of the middlewares above, you can add it directly on the plugin.
 
@@ -232,17 +241,17 @@ If you want to add any of the middlewares above, you can add it directly on the 
 const mongoose_fuzzy_searching = require('mongoose-fuzzy-searching');
 
 const UserSchema = new Schema({
-  firstName: String,
-  lastName: String,
+	firstName: String,
+	lastName: String,
 });
 
 UserSchema.plugin(mongoose_fuzzy_searching, {
-  fields: ['firstName'],
-  middlewares: {
-    preSave: function () {
-      // do something before the object is saved
-    },
-  },
+	fields: ['firstName'],
+	middlewares: {
+		preSave: function () {
+			// do something before the object is saved
+		},
+	},
 });
 ```
 
@@ -292,31 +301,31 @@ Example:
 User.fuzzySearch('jo').then(console.log).catch(console.error);
 
 /* With additional options that returns a Promise */
-User.fuzzySearch({ query: 'jo', prefixOnly: true, minSize: 4 })
-  .then(console.log)
-  .catch(console.error);
+User.fuzzySearch({query: 'jo', prefixOnly: true, minSize: 4})
+	.then(console.log)
+	.catch(console.error);
 
 /* With additional queries that returns a Promise */
-User.fuzzySearch('jo', { age: { $gt: 18 } })
-  .then(console.log)
-  .catch(console.error);
+User.fuzzySearch('jo', {age: {$gt: 18}})
+	.then(console.log)
+	.catch(console.error);
 
 /* With string and a callback */
 User.fuzzySearch('jo', (err, doc) => {
-  if (err) {
-    console.error(err);
-  } else {
-    console.log(doc);
-  }
+	if (err) {
+		console.error(err);
+	} else {
+		console.log(doc);
+	}
 });
 
 /* With additional queries and callback */
-User.fuzzySearch('jo', { age: { $gt: 18 } }, (err, doc) => {
-  if (err) {
-    console.error(err);
-  } else {
-    console.log(doc);
-  }
+User.fuzzySearch('jo', {age: {$gt: 18}}, (err, doc) => {
+	if (err) {
+		console.error(err);
+	} else {
+		console.log(doc);
+	}
 });
 ```
 
@@ -331,9 +340,9 @@ This helpers doesn't accept a callback function. If you pass a function it will 
 Example:
 
 ```javascript
-const user = await User.find({ age: { $gte: 30 } })
-  .fuzzySearch('jo')
-  .exec();
+const user = await User.find({age: {$gte: 30}})
+	.fuzzySearch('jo')
+	.exec();
 ```
 
 ## Working with pre-existing data
@@ -344,13 +353,15 @@ The plugin creates indexes for the selected fields. In the below example the new
 const mongoose_fuzzy_searching = require('mongoose-fuzzy-searching');
 
 const UserSchema = new Schema({
-  firstName: String,
-  lastName: String,
-  email: String,
-  age: Number,
+	firstName: String,
+	lastName: String,
+	email: String,
+	age: Number,
 });
 
-UserSchema.plugin(mongoose_fuzzy_searching, { fields: ['firstName', 'lastName'] });
+UserSchema.plugin(mongoose_fuzzy_searching, {
+	fields: ['firstName', 'lastName'],
+});
 ```
 
 In other words, this plugin creates anagrams when you create or update a document. All the pre-existing documents won't contain these fuzzy arrays, so `fuzzySearch` function, will not be able to find them.
@@ -362,8 +373,8 @@ In order to create anagrams for pre-existing documents, you should update each d
 ```javascript
 const cursor = Model.find().cursor();
 cursor.next(function (error, doc) {
-  const obj = attrs.reduce((acc, attr) => ({ ...acc, [attr]: doc[attr] }), {});
-  return Model.findByIdAndUpdate(doc._id, obj);
+	const obj = attrs.reduce((acc, attr) => ({...acc, [attr]: doc[attr]}), {});
+	return Model.findByIdAndUpdate(doc._id, obj);
 });
 ```
 
@@ -374,8 +385,15 @@ In the previous example, we set `firstName` and `lastName` as the fuzzy attribut
 ```javascript
 const cursor = Model.find().cursor();
 cursor.next(function (error, doc) {
-  const $unset = attrs.reduce((acc, attr) => ({ ...acc, [`${attr}_fuzzy`]: 1 }), {});
-  return Model.findByIdAndUpdate(data._id, { $unset }, { new: true, strict: false });
+	const $unset = attrs.reduce(
+		(acc, attr) => ({...acc, [`${attr}_fuzzy`]: 1}),
+		{},
+	);
+	return Model.findByIdAndUpdate(
+		data._id,
+		{$unset},
+		{new: true, strict: false},
+	);
 });
 ```
 
