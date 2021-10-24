@@ -19,17 +19,21 @@ declare module 'mongoose-fuzzy-searching' {
 		data: Model<T, QueryHelpers>[],
 	) => void;
 
+	type FuzzyQuery<T> = T & {
+		confidenceScore: number;
+	};
+
 	export interface MongooseFuzzyModel<T extends Document, QueryHelpers = {}>
 		extends Model<T, QueryHelpers> {
 		fuzzySearch(
 			query: Search,
 			additionalQuery?: FilterQuery<T>,
-			callback?: Callback<T, QueryHelpers>,
-		): Query<T[], T, QueryHelpers>;
+			callback?: Callback<FuzzyQuery<T>, QueryHelpers>,
+		): Query<FuzzyQuery<T>[], FuzzyQuery<T>, QueryHelpers>;
 		fuzzySearch(
 			query: Search,
-			callback?: Callback<T, QueryHelpers>,
-		): Query<T[], T, QueryHelpers>;
+			callback?: Callback<FuzzyQuery<T>, QueryHelpers>,
+		): Query<FuzzyQuery<T>[], FuzzyQuery<T>, QueryHelpers>;
 	}
 
 	function fuzzyPlugin<T>(
