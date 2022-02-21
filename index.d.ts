@@ -24,12 +24,12 @@ declare module 'mongoose-fuzzy-searching' {
 				exactOnly?: boolean;
 		  };
 
-	type Callback<T, QueryHelpers> = (
+	export type Callback<T, QueryHelpers> = (
 		err: any,
 		data: Model<T, QueryHelpers>[],
 	) => void;
 
-	type FuzzyQuery<T> = T & {
+	export type FuzzyQuery<T> = T & {
 		confidenceScore: number;
 	};
 
@@ -46,7 +46,7 @@ declare module 'mongoose-fuzzy-searching' {
 		): Query<FuzzyQuery<T>[], FuzzyQuery<T>, QueryHelpers>;
 	}
 
-	function fuzzyPlugin<T>(
+	export function fuzzyPlugin<T>(
 		schema: Schema<T>,
 		options: MongooseFuzzyOptions<T>,
 	): void;
