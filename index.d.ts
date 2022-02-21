@@ -2,7 +2,17 @@ declare module 'mongoose-fuzzy-searching' {
 	import {Document, Query, FilterQuery, Model, Schema} from 'mongoose';
 
 	export interface MongooseFuzzyOptions<T> {
-		fields: (T extends Object ? keyof T : string)[];
+		fields: (
+			| (T extends Object ? keyof T : string)
+			| {
+					name: T extends Object ? keyof T : string;
+					minSize?: number;
+					weight?: number;
+					prefixOnly?: boolean;
+					escapeSpecialCharacters?: boolean;
+					keys?: string[];
+			  }
+		)[];
 	}
 
 	export type Search =
