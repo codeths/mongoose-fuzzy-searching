@@ -47,15 +47,16 @@ declare module 'mongoose-fuzzy-searching' {
 	}
 
 	export abstract class MongooseFuzzyClass {
-		public static fuzzySearch<T extends Document, QueryHelpers = {}>(
-			query: Search,
-			additionalQuery?: FilterQuery<T>,
-			callback?: Callback<FuzzyQuery<T>, QueryHelpers>,
-		): Query<FuzzyQuery<T>[], FuzzyQuery<T>, QueryHelpers>;
-		public static fuzzySearch<T extends Document, QueryHelpers = {}>(
-			query: Search,
-			callback?: Callback<FuzzyQuery<T>, QueryHelpers>,
-		): Query<FuzzyQuery<T>[], FuzzyQuery<T>, QueryHelpers>;
+		public static fuzzySearch:
+			| (<T extends MongooseFuzzyClass, QueryHelpers = {}>(
+					query: Search,
+					additionalQuery?: FilterQuery<T>,
+					callback?: Callback<FuzzyQuery<T>, QueryHelpers>,
+			  ) => Query<FuzzyQuery<T>[], FuzzyQuery<T>, QueryHelpers>)
+			| (<T extends MongooseFuzzyClass, QueryHelpers = {}>(
+					query: Search,
+					callback?: Callback<FuzzyQuery<T>, QueryHelpers>,
+			  ) => Query<FuzzyQuery<T>[], FuzzyQuery<T>, QueryHelpers>);
 	}
 
 	export function fuzzyPlugin<T>(
